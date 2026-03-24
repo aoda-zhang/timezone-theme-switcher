@@ -67,6 +67,23 @@ The extension will automatically detect whether it's day or night and switch to 
 | `Timezone Theme: Start Auto` | Start automatic theme switching |
 | `Timezone Theme: Stop Auto` | Stop automatic theme switching |
 
+## 📋 JSON Configuration Guide
+
+For detailed JSON configuration options, see [CUSTOMIZE_GUIDE.md](./CUSTOMIZE_GUIDE.md).
+
+Quick example:
+
+```json
+{
+  "timezoneTheme.timezone": "Asia/Shanghai",
+  "timezoneTheme.dayTheme": "One Light Pro",
+  "timezoneTheme.nightTheme": "One Dark Pro",
+  "timezoneTheme.autoIntervalMinutes": 30,
+  "timezoneTheme.dayStartHour": 6,
+  "timezoneTheme.dayEndHour": 18
+}
+```
+
 ## ⚙️ Configuration
 
 Configure in VSCode settings (`Ctrl+,`):

@@ -1,12 +1,12 @@
 {
   "name": "timezone-theme-switcher",
   "displayName": "Timezone Theme Switcher",
-  "description": "根据指定时区自动判断白天/黑夜并切换 VSCode 主题",
+  "description": "Auto switch VSCode theme based on timezone day/night detection | 根据时区自动切换白天/黑夜主题",
   "version": "1.0.0",
   "publisher": "aoda-zhang",
   "author": {
-    "name": "Your Name",
-    "email": "your@email.com"
+    "name": "aoda-zhang",
+    "email": "aoda@example.com"
   },
   "license": "MIT",
   "repository": {
@@ -33,17 +33,17 @@
     "vscode"
   ],
   "activationEvents": [
-    "onCommand:timezone-theme.switch",
-    "onCommand:timezone-theme.auto"
+    "*"
   ],
   "contributes": {
     "commands": [
       {
         "command": "timezone-theme.switch",
-        "title": "Timezone Theme: 切换主题",
+        "title": "Timezone Theme: 切换主题 (Switch Theme)",
         "arguments": [
           {
-            "type": "string"
+            "type": "string",
+            "description": "IANA 时区名"
           }
         ]
       },
@@ -70,6 +70,10 @@
       {
         "command": "timezone-theme.stopAuto",
         "title": "Timezone Theme: 停止自动切换"
+      },
+      {
+        "command": "timezone-theme.testTimezone",
+        "title": "Timezone Theme: 测试时区"
       }
     ],
     "configuration": {
@@ -88,7 +92,7 @@
         "timezoneTheme.timezone": {
           "type": "string",
           "default": "Asia/Shanghai",
-          "description": "默认时区（IANA 时区名）"
+          "description": "默认时区 (IANA 格式)"
         },
         "timezoneTheme.autoIntervalMinutes": {
           "type": "number",
@@ -98,20 +102,23 @@
         "timezoneTheme.dayStartHour": {
           "type": "number",
           "default": 6,
-          "description": "白天开始小时（0-24）"
+          "minimum": 0,
+          "maximum": 24,
+          "description": "白天开始小时 (0-24)"
         },
         "timezoneTheme.dayEndHour": {
           "type": "number",
           "default": 18,
-          "description": "白天结束小时（0-24）"
+          "minimum": 0,
+          "maximum": 24,
+          "description": "白天结束小时 (0-24)"
         }
       }
     }
   },
   "scripts": {
     "package": "vsce package",
-    "publish": "vsce publish",
-    "publish:beta": "vsce publish --pre-release"
+    "publish": "vsce publish"
   },
   "devDependencies": {
     "@types/vscode": "^1.75.0",

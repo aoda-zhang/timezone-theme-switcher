@@ -67,6 +67,23 @@ Timezone Theme
 | `Timezone Theme: 开启自动切换` | 启动定时自动切换 |
 | `Timezone Theme: 停止自动切换` | 停止自动切换 |
 
+## 📋 JSON 自定义配置指南
+
+详细配置说明请查看 [CUSTOMIZE_GUIDE.md](./CUSTOMIZE_GUIDE.md)。
+
+快速配置示例：
+
+```json
+{
+  "timezoneTheme.timezone": "Asia/Shanghai",
+  "timezoneTheme.dayTheme": "One Light Pro",
+  "timezoneTheme.nightTheme": "One Dark Pro",
+  "timezoneTheme.autoIntervalMinutes": 30,
+  "timezoneTheme.dayStartHour": 6,
+  "timezoneTheme.dayEndHour": 18
+}
+```
+
 ## ⚙️ 配置选项
 
 在 VSCode 设置中配置（`Ctrl+,` 打开设置）：
