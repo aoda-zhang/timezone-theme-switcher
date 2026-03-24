@@ -1,12 +1,12 @@
 # Timezone Theme Switcher
 
-[English](./README.md) | 中文
+根据指定的 IANA 时区自动判断白天/黑夜，并切换 VSCode 主题的插件。
 
 根据指定的 IANA 时区自动判断白天/黑夜，并切换 VSCode 主题的插件。
 
-[![Version](https://vsmarketplacebadges.dev/version-short/timezone-theme-switcher.svg)](https://marketplace.visualstudio.com/items?itemName=timezone-theme-switcher)
-[![Installs](https://vsmarketplacebadges.dev/installs-short/timezone-theme-switcher.svg)](https://marketplace.visualstudio.com/items?itemName=timezone-theme-switcher)
-[![Rating](https://vsmarketplacebadges.dev/rating-star/timezone-theme-switcher.svg)](https://marketplace.visualstudio.com/items?itemName=timezone-theme-switcher)
+[![Version](https://vsmarketplacebadges.dev/version-short/aoda-zhang.timezone-theme-switcher.svg)](https://marketplace.visualstudio.com/items?itemName=aoda-zhang.timezone-theme-switcher)
+[![Installs](https://vsmarketplacebadges.dev/installs-short/aoda-zhang.timezone-theme-switcher.svg)](https://marketplace.visualstudio.com/items?itemName=aoda-zhang.timezone-theme-switcher)
+[![Rating](https://vsmarketplacebadges.dev/rating-star/aoda-zhang.timezone-theme-switcher.svg)](https://marketplace.visualstudio.com/items?itemName=aoda-zhang.timezone-theme-switcher)
 
 ## ✨ 功能特性
 
@@ -28,7 +28,7 @@
 
 ### 方式二：VSIX 文件安装
 
-1. 从 [Releases](https://github.com/your-username/timezone-theme-switcher/releases) 下载 `.vsix` 文件
+1. 从 [Releases](https://github.com/aoda-zhang/timezone-theme-switcher/releases) 下载 `.vsix` 文件
 2. 在 VSCode 中按 `Ctrl+Shift+P`，输入「从 VSIX 安装」
 
 ### 方式三：命令行安装
@@ -129,7 +129,7 @@ Timezone Theme
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/timezone-theme-switcher.git
+git clone https://github.com/aoda-zhang/timezone-theme-switcher.git
 cd timezone-theme-switcher
 
 # 安装依赖
@@ -161,4 +161,6 @@ npm run publish
 
 ---
 
-如果你觉得这个插件有用，请给我一个 ⭐！
+如果你觉得这个插件有用，请给个 ⭐！
+
+[![Star](https://img.shields.io/github/stars/aoda-zhang/timezone-theme-switcher?style=social)](https://github.com/aoda-zhang/timezone-theme-switcher)

@@ -3,7 +3,7 @@
   "displayName": "Timezone Theme Switcher",
   "description": "根据指定时区自动判断白天/黑夜并切换 VSCode 主题",
   "version": "1.0.0",
-  "publisher": "your-github-username",
+  "publisher": "aoda-zhang",
   "author": {
     "name": "Your Name",
     "email": "your@email.com"
@@ -11,12 +11,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-username/timezone-theme-switcher"
+    "url": "https://github.com/aoda-zhang/timezone-theme-switcher"
   },
   "bugs": {
-    "url": "https://github.com/your-username/timezone-theme-switcher/issues"
+    "url": "https://github.com/aoda-zhang/timezone-theme-switcher/issues"
   },
-  "homepage": "https://github.com/your-username/timezone-theme-switcher#readme",
+  "homepage": "https://github.com/aoda-zhang/timezone-theme-switcher#readme",
   "engines": {
     "vscode": "^1.75.0"
   },
