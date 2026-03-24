@@ -1,19 +1,19 @@
 const vscode = require('vscode');
 
-// 存储自动切换的 interval ID
+// Auto switch interval ID
 let autoSwitchInterval = null;
-// 存储状态栏项
+// Status bar item
 let statusBarItem = null;
 
 /**
- * 根据 IANA 时区名获取当前时间信息
- * @param {string} timezone - IANA 时区名
+ * Get current time info for a given IANA timezone
+ * @param {string} timezone - IANA timezone name
  * @returns {{ isDay: boolean, currentHour: number, timezoneName: string, localTime: string }}
  */
 function getTimeInfo(timezone) {
     const now = new Date();
     
-    // 获取指定时区的小时
+    // Get hour in specified timezone
     const formatter = new Intl.DateTimeFormat('en-US', {
         timeZone: timezone,
         hour: 'numeric',
@@ -23,14 +23,14 @@ function getTimeInfo(timezone) {
     const parts = formatter.formatToParts(now);
     const hour = parseInt(parts.find(p => p.type === 'hour').value, 10);
     
-    // 获取配置中的白天时段
+    // Get day/night hours from config
     const config = vscode.workspace.getConfiguration('timezoneTheme');
     const dayStart = config.get('dayStartHour', 6);
     const dayEnd = config.get('dayEndHour', 18);
     const isDay = hour >= dayStart && hour < dayEnd;
     
-    // 获取完整时间字符串
-    const timeFormatter = new Intl.DateTimeFormat('zh-CN', {
+    // Get full time string
+    const timeFormatter = new Intl.DateTimeFormat('en-US', {
         timeZone: timezone,
         year: 'numeric',
         month: '2-digit',
@@ -49,8 +49,8 @@ function getTimeInfo(timezone) {
 }
 
 /**
- * 切换到指定主题
- * @param {boolean} isDay - true 为白天，false 为黑夜
+ * Switch to specified theme
+ * @param {boolean} isDay - true for day, false for night
  */
 async function switchTheme(isDay) {
     const config = vscode.workspace.getConfiguration('timezoneTheme');
@@ -59,35 +59,35 @@ async function switchTheme(isDay) {
         : config.get('nightTheme', 'Default Dark Modern');
     
     try {
-        // 直接通过配置设置主题（不需要用户交互）
+        // Set theme directly via workbench config (no user interaction needed)
         const workbenchConfig = vscode.workspace.getConfiguration('workbench');
         await workbenchConfig.update('colorTheme', theme, vscode.ConfigurationTarget.Global);
         
-        const status = isDay ? '☀️ 白天' : '🌙 黑夜';
+        const status = isDay ? 'Day' : 'Night';
         const timeInfo = getTimeInfo(config.get('timezone', 'Asia/Shanghai'));
         
-        // 更新状态栏
+        // Update status bar
         updateStatusBar(isDay, theme);
         
         vscode.window.showInformationMessage(
-            `✅ 主题已切换为 "${theme}" (${status})\n当前时间: ${timeInfo.localTime}`,
+            `Theme switched to "${theme}" (${status})\nTime: ${timeInfo.localTime}`,
             { modal: false }
         );
         
         return { success: true, theme, isDay };
     } catch (error) {
-        vscode.window.showErrorMessage(`切换主题失败: ${error.message}`);
+        vscode.window.showErrorMessage(`Failed to switch theme: ${error.message}`);
         return { success: false, error: error.message };
     }
 }
 
 /**
- * 根据时区自动切换主题
- * @param {string} timezone - IANA 时区名
+ * Switch theme based on timezone
+ * @param {string} timezone - IANA timezone name
  */
 async function switchByTimezone(timezone) {
     if (!isValidTimezone(timezone)) {
-        vscode.window.showErrorMessage(`无效的时区: ${timezone}`);
+        vscode.window.showErrorMessage(`Invalid timezone: ${timezone}`);
         return { success: false, error: 'Invalid timezone' };
     }
     
@@ -96,7 +96,7 @@ async function switchByTimezone(timezone) {
 }
 
 /**
- * 验证时区是否有效
+ * Validate timezone
  * @param {string} timezone 
  * @returns {boolean}
  */
@@ -110,55 +110,55 @@ function isValidTimezone(timezone) {
 }
 
 /**
- * 显示时区选择器
+ * Show timezone picker
  */
 async function showTimezonePicker() {
     const config = vscode.workspace.getConfiguration('timezoneTheme');
     const currentZone = config.get('timezone', 'Asia/Shanghai');
     
     const quickPick = vscode.window.createQuickPick();
-    quickPick.placeholder = '选择时区（输入搜索或直接输入 IANA 时区名）';
+    quickPick.placeholder = 'Select timezone (type to search or enter IANA timezone)';
     quickPick.canSelectMany = false;
     
-    // 常用时区列表（按地区分组）
+    // Common timezones grouped by region
     const commonTimezones = [
-        { group: '🌏 亚洲', timezones: [
-            { label: '北京 / 上海', value: 'Asia/Shanghai', offset: 'UTC+8' },
-            { label: '香港', value: 'Asia/Hong_Kong', offset: 'UTC+8' },
-            { label: '新加坡', value: 'Asia/Singapore', offset: 'UTC+8' },
-            { label: '东京', value: 'Asia/Tokyo', offset: 'UTC+9' },
-            { label: '首尔', value: 'Asia/Seoul', offset: 'UTC+9' },
-            { label: '台北', value: 'Asia/Taipei', offset: 'UTC+8' },
-            { label: '曼谷', value: 'Asia/Bangkok', offset: 'UTC+7' },
-            { label: '孟买', value: 'Asia/Kolkata', offset: 'UTC+5:30' },
-            { label: '迪拜', value: 'Asia/Dubai', offset: 'UTC+4' },
+        { group: 'Asia', timezones: [
+            { label: 'Beijing / Shanghai', value: 'Asia/Shanghai', offset: 'UTC+8' },
+            { label: 'Hong Kong', value: 'Asia/Hong_Kong', offset: 'UTC+8' },
+            { label: 'Singapore', value: 'Asia/Singapore', offset: 'UTC+8' },
+            { label: 'Tokyo', value: 'Asia/Tokyo', offset: 'UTC+9' },
+            { label: 'Seoul', value: 'Asia/Seoul', offset: 'UTC+9' },
+            { label: 'Taipei', value: 'Asia/Taipei', offset: 'UTC+8' },
+            { label: 'Bangkok', value: 'Asia/Bangkok', offset: 'UTC+7' },
+            { label: 'Mumbai', value: 'Asia/Kolkata', offset: 'UTC+5:30' },
+            { label: 'Dubai', value: 'Asia/Dubai', offset: 'UTC+4' },
         ]},
-        { group: '🌍 欧洲', timezones: [
-            { label: '伦敦', value: 'Europe/London', offset: 'UTC+0' },
-            { label: '巴黎', value: 'Europe/Paris', offset: 'UTC+1' },
-            { label: '柏林', value: 'Europe/Berlin', offset: 'UTC+1' },
-            { label: '莫斯科', value: 'Europe/Moscow', offset: 'UTC+3' },
-            { label: '罗马', value: 'Europe/Rome', offset: 'UTC+1' },
-            { label: '阿姆斯特丹', value: 'Europe/Amsterdam', offset: 'UTC+1' },
+        { group: 'Europe', timezones: [
+            { label: 'London', value: 'Europe/London', offset: 'UTC+0' },
+            { label: 'Paris', value: 'Europe/Paris', offset: 'UTC+1' },
+            { label: 'Berlin', value: 'Europe/Berlin', offset: 'UTC+1' },
+            { label: 'Moscow', value: 'Europe/Moscow', offset: 'UTC+3' },
+            { label: 'Rome', value: 'Europe/Rome', offset: 'UTC+1' },
+            { label: 'Amsterdam', value: 'Europe/Amsterdam', offset: 'UTC+1' },
         ]},
-        { group: '🌎 美洲', timezones: [
-            { label: '纽约', value: 'America/New_York', offset: 'UTC-5' },
-            { label: '洛杉矶', value: 'America/Los_Angeles', offset: 'UTC-8' },
-            { label: '旧金山', value: 'America/Los_Angeles', offset: 'UTC-8' },
-            { label: '芝加哥', value: 'America/Chicago', offset: 'UTC-6' },
-            { label: '多伦多', value: 'America/Toronto', offset: 'UTC-5' },
-            { label: '温哥华', value: 'America/Vancouver', offset: 'UTC-8' },
-            { label: '圣保罗', value: 'America/Sao_Paulo', offset: 'UTC-3' },
+        { group: 'Americas', timezones: [
+            { label: 'New York', value: 'America/New_York', offset: 'UTC-5' },
+            { label: 'Los Angeles', value: 'America/Los_Angeles', offset: 'UTC-8' },
+            { label: 'San Francisco', value: 'America/Los_Angeles', offset: 'UTC-8' },
+            { label: 'Chicago', value: 'America/Chicago', offset: 'UTC-6' },
+            { label: 'Toronto', value: 'America/Toronto', offset: 'UTC-5' },
+            { label: 'Vancouver', value: 'America/Vancouver', offset: 'UTC-8' },
+            { label: 'Sao Paulo', value: 'America/Sao_Paulo', offset: 'UTC-3' },
         ]},
-        { group: '🌏 大洋洲', timezones: [
-            { label: '悉尼', value: 'Australia/Sydney', offset: 'UTC+11' },
-            { label: '墨尔本', value: 'Australia/Melbourne', offset: 'UTC+11' },
-            { label: '奥克兰', value: 'Pacific/Auckland', offset: 'UTC+13' },
-            { label: '惠灵顿', value: 'Pacific/Auckland', offset: 'UTC+13' },
+        { group: 'Oceania', timezones: [
+            { label: 'Sydney', value: 'Australia/Sydney', offset: 'UTC+11' },
+            { label: 'Melbourne', value: 'Australia/Melbourne', offset: 'UTC+11' },
+            { label: 'Auckland', value: 'Pacific/Auckland', offset: 'UTC+13' },
+            { label: 'Wellington', value: 'Pacific/Auckland', offset: 'UTC+13' },
         ]},
     ];
     
-    // 将分组转换为 quick pick items
+    // Convert groups to quick pick items
     const items = [];
     for (const group of commonTimezones) {
         items.push({ label: group.group, kind: vscode.QuickPickItemKind.Separator });
@@ -173,7 +173,7 @@ async function showTimezonePicker() {
     
     quickPick.items = items;
     
-    // 高亮当前时区
+    // Highlight current timezone
     for (const item of items) {
         if (item.value === currentZone) {
             quickPick.selectedItem = item;
@@ -194,10 +194,9 @@ async function showTimezonePicker() {
         }
     });
     
-    // 支持直接输入时区
+    // Support direct timezone input
     quickPick.onDidChangeValue(async (value) => {
         if (value.includes('/') && isValidTimezone(value)) {
-            // 用户输入了有效的 IANA 时区
             await config.update('timezone', value, vscode.ConfigurationTarget.Global);
             const timeInfo = getTimeInfo(value);
             await switchTheme(timeInfo.isDay);
@@ -209,7 +208,7 @@ async function showTimezonePicker() {
 }
 
 /**
- * 显示主题选择器
+ * Show theme picker
  */
 async function showThemePicker(type) {
     const config = vscode.workspace.getConfiguration('timezoneTheme');
@@ -218,12 +217,12 @@ async function showThemePicker(type) {
         : config.get('nightTheme', 'Default Dark Modern');
     
     const quickPick = vscode.window.createQuickPick();
-    quickPick.placeholder = `选择${type === 'day' ? '白天☀️' : '黑夜🌙'}主题`;
+    quickPick.placeholder = `Select ${type === 'day' ? 'day' : 'night'} theme`;
     quickPick.canSelectMany = false;
     
-    // 常用主题列表
+    // Popular themes list
     const builtInThemes = [
-        // VSCode 内置主题
+        // VSCode built-in
         'Default Light Modern',
         'Default Dark Modern', 
         'Visual Studio Light',
@@ -232,7 +231,7 @@ async function showThemePicker(type) {
         'High Contrast Dark',
         'Solarized Light',
         'Solarized Dark',
-        // 热门主题
+        // Popular themes
         'Monokai',
         'Monokai+',
         'One Dark Pro',
@@ -267,7 +266,7 @@ async function showThemePicker(type) {
     
     quickPick.items = items;
     
-    // 默认选中当前
+    // Default to current
     const selectedIndex = items.findIndex(item => item.label === currentTheme);
     if (selectedIndex >= 0) {
         quickPick.activeItems = [items[selectedIndex]];
@@ -279,12 +278,11 @@ async function showThemePicker(type) {
             const settingKey = type === 'day' ? 'dayTheme' : 'nightTheme';
             await config.update(settingKey, selected.label, vscode.ConfigurationTarget.Global);
             
-            const icon = type === 'day' ? '☀️' : '🌙';
             vscode.window.showInformationMessage(
-                `${icon} ${type === 'day' ? '白天' : '黑夜'}主题已设置为: ${selected.label}`
+                `${type === 'day' ? 'Day' : 'Night'} theme set to: ${selected.label}`
             );
             
-            // 立即应用（如果当前时段匹配）
+            // Apply immediately if current period matches
             const timezone = config.get('timezone', 'Asia/Shanghai');
             const timeInfo = getTimeInfo(timezone);
             if ((type === 'day' && timeInfo.isDay) || (type === 'night' && !timeInfo.isDay)) {
@@ -299,7 +297,7 @@ async function showThemePicker(type) {
 }
 
 /**
- * 显示状态信息面板
+ * Show status info panel
  */
 function showStatusInfo() {
     const config = vscode.workspace.getConfiguration('timezoneTheme');
@@ -309,7 +307,7 @@ function showStatusInfo() {
     
     const panel = vscode.window.createWebviewPanel(
         'timezoneStatus',
-        '⏰ 时区主题状态',
+        'Timezone Theme Status',
         vscode.ViewColumn.One,
         { enableScripts: false }
     );
@@ -423,66 +421,66 @@ function showStatusInfo() {
         <body>
             <div class="card">
                 <div class="header">
-                    <span class="icon">${timeInfo.isDay ? '☀️' : '🌙'}</span>
+                    <span class="icon">${timeInfo.isDay ? 'Sun' : 'Moon'}</span>
                     <div>
-                        <div class="title">${timeInfo.isDay ? '白天模式' : '黑夜模式'}</div>
+                        <div class="title">${timeInfo.isDay ? 'Day Mode' : 'Night Mode'}</div>
                         <div class="subtitle">
                             <span class="status-badge ${timeInfo.isDay ? 'day-badge' : 'night-badge'}">
-                                ${timeInfo.isDay ? '☀️ Day' : '🌙 Night'}
+                                ${timeInfo.isDay ? 'Day' : 'Night'}
                             </span>
                         </div>
                     </div>
                 </div>
                 <div class="info-row">
-                    <span class="label">当前时区</span>
+                    <span class="label">Current Timezone</span>
                     <span class="value">${timeInfo.timezoneName}</span>
                 </div>
                 <div class="info-row">
-                    <span class="label">本地时间</span>
+                    <span class="label">Local Time</span>
                     <span class="value">${timeInfo.localTime}</span>
                 </div>
                 <div class="info-row">
-                    <span class="label">当前小时</span>
+                    <span class="label">Current Hour</span>
                     <span class="value">${String(timeInfo.currentHour).padStart(2, '0')}:00</span>
                 </div>
                 <div class="info-row">
-                    <span class="label">自动切换</span>
-                    <span class="value">${isAuto ? '✅ 开启中' : '❌ 已关闭'}</span>
+                    <span class="label">Auto Switch</span>
+                    <span class="value">${isAuto ? 'On' : 'Off'}</span>
                 </div>
             </div>
             
             <div class="card">
                 <div class="header">
-                    <span class="icon">⚙️</span>
+                    <span class="icon">Settings</span>
                     <div>
-                        <div class="title">当前配置</div>
+                        <div class="title">Current Configuration</div>
                         <div class="subtitle">Settings</div>
                     </div>
                 </div>
                 <div class="info-row">
-                    <span class="label">☀️ 白天主题</span>
+                    <span class="label">Day Theme</span>
                     <span class="value day-value">${dayTheme}</span>
                 </div>
                 <div class="info-row">
-                    <span class="label">🌙 黑夜主题</span>
+                    <span class="label">Night Theme</span>
                     <span class="value night-value">${nightTheme}</span>
                 </div>
                 <div class="info-row">
-                    <span class="label">白天时段</span>
+                    <span class="label">Day Hours</span>
                     <span class="value">${dayStart}:00 - ${dayEnd}:00</span>
                 </div>
                 <div class="info-row">
-                    <span class="label">检测间隔</span>
-                    <span class="value">${interval} 分钟</span>
+                    <span class="label">Check Interval</span>
+                    <span class="value">${interval} minutes</span>
                 </div>
             </div>
             
             <div class="card commands">
-                <h3>💡 快捷命令</h3>
-                <div class="cmd"><code>Ctrl+Shift+P</code> → 输入 Timezone Theme</div>
-                <div class="cmd"><code>timezone-theme.switchByZone</code> 切换时区</div>
-                <div class="cmd"><code>timezone-theme.auto</code> 开启自动切换</div>
-                <div class="cmd"><code>timezone-theme.status</code> 查看状态</div>
+                <h3>Commands</h3>
+                <div class="cmd"><code>Ctrl+Shift+P</code> → Type Timezone Theme</div>
+                <div class="cmd"><code>timezone-theme.switchByZone</code> Switch timezone</div>
+                <div class="cmd"><code>timezone-theme.auto</code> Start auto switch</div>
+                <div class="cmd"><code>timezone-theme.status</code> View status</div>
             </div>
         </body>
         </html>
@@ -490,7 +488,7 @@ function showStatusInfo() {
 }
 
 /**
- * 更新状态栏显示
+ * Update status bar display
  */
 function updateStatusBar(isDay, theme) {
     if (statusBarItem) {
@@ -498,18 +496,18 @@ function updateStatusBar(isDay, theme) {
     }
     
     statusBarItem = vscode.window.createStatusBarItem(1, 0);
-    statusBarItem.text = `${isDay ? '☀️' : '🌙'} ${theme}`;
+    statusBarItem.text = `${isDay ? 'Day' : 'Night'} - ${theme}`;
     statusBarItem.command = 'timezone-theme.status';
-    statusBarItem.tooltip = '点击查看时区主题状态';
+    statusBarItem.tooltip = 'Click to view timezone theme status';
     statusBarItem.show();
 }
 
 /**
- * 启动自动切换
+ * Start auto switching
  */
 async function startAutoSwitch() {
     if (autoSwitchInterval) {
-        vscode.window.showInformationMessage('⏰ 自动切换已在运行中');
+        vscode.window.showInformationMessage('Auto switch is already running');
         return;
     }
     
@@ -517,11 +515,11 @@ async function startAutoSwitch() {
     const intervalMinutes = config.get('autoIntervalMinutes', 30);
     const timezone = config.get('timezone', 'Asia/Shanghai');
     
-    // 立即执行一次
+    // Run immediately
     const timeInfo = getTimeInfo(timezone);
     await switchTheme(timeInfo.isDay);
     
-    // 设置定时器
+    // Set interval
     autoSwitchInterval = setInterval(async () => {
         const tz = vscode.workspace.getConfiguration('timezoneTheme').get('timezone', 'Asia/Shanghai');
         const ti = getTimeInfo(tz);
@@ -529,13 +527,13 @@ async function startAutoSwitch() {
     }, intervalMinutes * 60 * 1000);
     
     vscode.window.showInformationMessage(
-        `✅ 已开启自动切换\n⏰ 每 ${intervalMinutes} 分钟检测一次\n🌍 时区: ${timezone}`,
+        `Auto switch enabled\nEvery ${intervalMinutes} minutes\nTimezone: ${timezone}`,
         { modal: false }
     );
 }
 
 /**
- * 停止自动切换
+ * Stop auto switching
  */
 function stopAutoSwitch() {
     if (autoSwitchInterval) {
@@ -547,18 +545,18 @@ function stopAutoSwitch() {
             statusBarItem = null;
         }
         
-        vscode.window.showInformationMessage('⏹️ 已停止自动切换');
+        vscode.window.showInformationMessage('Auto switch stopped');
     } else {
-        vscode.window.showInformationMessage('ℹ️ 当前没有运行自动切换');
+        vscode.window.showInformationMessage('Auto switch is not running');
     }
 }
 
-// ============ 插件入口 ============
+// ============ Extension Entry Point ============
 
 function activate(context) {
     console.log('[Timezone Theme] Extension activated');
     
-    // 注册所有命令
+    // Register all commands
     const commands = [
         { cmd: 'timezone-theme.switch', handler: switchCommand },
         { cmd: 'timezone-theme.switchByZone', handler: () => showTimezonePicker() },
@@ -575,27 +573,26 @@ function activate(context) {
         context.subscriptions.push(disposable);
     }
     
-    // 插件激活时执行一次切换
+    // Run once on activation
     setTimeout(async () => {
         const config = vscode.workspace.getConfiguration('timezoneTheme');
         const timezone = config.get('timezone', 'Asia/Shanghai');
         const timeInfo = getTimeInfo(timezone);
         
-        // 自动切换到当前时区对应的主题
         await switchTheme(timeInfo.isDay);
         
         console.log(`[Timezone Theme] Initialized: ${timezone}, ${timeInfo.isDay ? 'Day' : 'Night'}`);
     }, 1000);
 }
 
-// 根据时区切换主题命令
+// Switch theme command handler
 async function switchCommand(timezone) {
     if (!timezone) {
         return showTimezonePicker();
     }
     
     if (!isValidTimezone(timezone)) {
-        vscode.window.showErrorMessage(`❌ 无效的时区: ${timezone}`);
+        vscode.window.showErrorMessage(`Invalid timezone: ${timezone}`);
         return;
     }
     
@@ -604,18 +601,18 @@ async function switchCommand(timezone) {
     await switchByTimezone(timezone);
 }
 
-// 测试时区命令（用于调试）
+// Test timezone command (for debugging)
 async function testTimezoneCommand() {
     const config = vscode.workspace.getConfiguration('timezoneTheme');
     const timezone = config.get('timezone', 'Asia/Shanghai');
     const timeInfo = getTimeInfo(timezone);
     
     vscode.window.showInformationMessage(
-        `🧪 测试结果\n时区: ${timezone}\n时间: ${timeInfo.localTime}\n状态: ${timeInfo.isDay ? '☀️ 白天' : '🌙 黑夜'}`
+        `Test Result\nTimezone: ${timezone}\nTime: ${timeInfo.localTime}\nStatus: ${timeInfo.isDay ? 'Day' : 'Night'}`
     );
 }
 
-// 插件停用
+// Extension deactivation
 function deactivate() {
     if (autoSwitchInterval) {
         clearInterval(autoSwitchInterval);
