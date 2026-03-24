@@ -1,0 +1,121 @@
+{
+  "name": "timezone-theme-switcher",
+  "displayName": "Timezone Theme Switcher",
+  "description": "根据指定时区自动判断白天/黑夜并切换 VSCode 主题",
+  "version": "1.0.0",
+  "publisher": "your-github-username",
+  "author": {
+    "name": "Your Name",
+    "email": "your@email.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/timezone-theme-switcher"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/timezone-theme-switcher/issues"
+  },
+  "homepage": "https://github.com/your-username/timezone-theme-switcher#readme",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other",
+    "Themes"
+  ],
+  "keywords": [
+    "theme",
+    "timezone",
+    "dark-mode",
+    "light-mode",
+    "productivity",
+    "vscode"
+  ],
+  "activationEvents": [
+    "onCommand:timezone-theme.switch",
+    "onCommand:timezone-theme.auto"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "timezone-theme.switch",
+        "title": "Timezone Theme: 切换主题",
+        "arguments": [
+          {
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "command": "timezone-theme.switchByZone",
+        "title": "Timezone Theme: 按时区切换"
+      },
+      {
+        "command": "timezone-theme.setDayTheme",
+        "title": "Timezone Theme: 设置白天主题"
+      },
+      {
+        "command": "timezone-theme.setNightTheme",
+        "title": "Timezone Theme: 设置黑夜主题"
+      },
+      {
+        "command": "timezone-theme.status",
+        "title": "Timezone Theme: 查看状态"
+      },
+      {
+        "command": "timezone-theme.auto",
+        "title": "Timezone Theme: 开启自动切换"
+      },
+      {
+        "command": "timezone-theme.stopAuto",
+        "title": "Timezone Theme: 停止自动切换"
+      }
+    ],
+    "configuration": {
+      "title": "Timezone Theme Switcher",
+      "properties": {
+        "timezoneTheme.dayTheme": {
+          "type": "string",
+          "default": "Default Light Modern",
+          "description": "白天使用的主题"
+        },
+        "timezoneTheme.nightTheme": {
+          "type": "string",
+          "default": "Default Dark Modern",
+          "description": "黑夜使用的主题"
+        },
+        "timezoneTheme.timezone": {
+          "type": "string",
+          "default": "Asia/Shanghai",
+          "description": "默认时区（IANA 时区名）"
+        },
+        "timezoneTheme.autoIntervalMinutes": {
+          "type": "number",
+          "default": 30,
+          "description": "自动切换间隔（分钟）"
+        },
+        "timezoneTheme.dayStartHour": {
+          "type": "number",
+          "default": 6,
+          "description": "白天开始小时（0-24）"
+        },
+        "timezoneTheme.dayEndHour": {
+          "type": "number",
+          "default": 18,
+          "description": "白天结束小时（0-24）"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "package": "vsce package",
+    "publish": "vsce publish",
+    "publish:beta": "vsce publish --pre-release"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.75.0",
+    "@vscode/vsce": "^2.21.0"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,12 @@
+# 忽略文件
+.vscode/**
+.vscode-test/**
+src/**
+out/**
+node_modules/**
+.git**
+*.md
+*.json
+*.yml
+*.yaml
+test/**

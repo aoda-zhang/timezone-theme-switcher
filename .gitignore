@@ -1,0 +1,31 @@
+# VSIX 包（发布后生成）
+*.vsix
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# VSCode
+.vscode-test/
+.vscode/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 测试
+test/
+out/
+
+# Logs
+*.log
